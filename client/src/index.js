@@ -1,10 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
+// index.js
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
+import React from "react";
+import ReactDOM from "react-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import { lightTheme, darkTheme } from "./components/Theme/Theme";
+
+import App from "./App"; // Your main application component
+
+ReactDOM.render(
+  <ThemeProvider theme={lightTheme}>
     <App />
-  </React.StrictMode>
+  </ThemeProvider>,
+  document.getElementById("root")
 );

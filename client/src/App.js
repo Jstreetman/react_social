@@ -1,7 +1,11 @@
-import logo from "./logo.svg";
+import Header from "./components/CommonComponents/Header/Header";
 
 function App() {
-  return <div className="App">Welcome to React App</div>;
+  return (
+    <div className="App">
+      <Header />
+    </div>
+  );
 }
 
 export default App;
