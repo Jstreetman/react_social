@@ -101,7 +101,7 @@ const Header = () => {
                   button
                   onClick={handleDrawerClose}
                   component="a"
-                  href="#register"
+                  href="/register"
                 >
                   <ListItemText primary="Register" />
                 </ListItem>
@@ -109,7 +109,7 @@ const Header = () => {
                   button
                   onClick={handleDrawerClose}
                   component="a"
-                  href="#login"
+                  href="/login"
                 >
                   <ListItemText primary="Login" />
                 </ListItem>
