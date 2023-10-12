@@ -1,17 +1,36 @@
 import React from "react";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardActionArea from "@mui/material/CardActionArea";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import "bootstrap/dist/css/bootstrap.css";
-import { Card, CardHeader, Container } from "@mui/material";
+import { Container } from "@mui/material";
 
-const Hero = () => {
+function Hero(props) {
   return (
-    <section className="p-5 mt-5">
-      <Container maxWidth="sm">
-        <Card sx={{ maxWidth: 345 }} className="bg-primary">
-          <CardHeader title="About"></CardHeader>
-        </Card>
-      </Container>
-    </section>
-  );
-};
+    <Container>
+      <CardActionArea>
+        <Card sx={{ minWidth: 275, backgroundColor: "#1976d2" }}>
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 40 }}
+              gutterBottom
+              className="text-center text-light"
+            >
+              {props.title}
+            </Typography>
 
+            <Typography variant="h6" paragraph className="text-light">
+              {props.description}
+            </Typography>
+          </CardContent>
+        </Card>
+      </CardActionArea>
+    </Container>
+  );
+}
 export default Hero;

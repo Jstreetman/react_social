@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Stack, Typography, Avatar } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.css";
-import "./landing.css";
 import profile from "../../images/social.svg";
 
 const Landing = () => {

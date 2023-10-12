@@ -9,6 +9,10 @@ import {
   Menu,
   MenuItem,
   useMediaQuery,
+  Drawer, // Import the Drawer component
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Landing from "../Body/Landing";
@@ -16,7 +20,18 @@ import Landing from "../Body/Landing";
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const [drawerOpen, setDrawerOpen] = useState(false); // State for the drawer
+
+  // Define your custom breakpoints
+  const customBreakpoints = {
+    xs: "(max-width: 600px)",
+    sm: "(max-width: 960px)",
+    md: "(max-width: 1280px)",
+    lg: "(max-width: 1920px)",
+    xl: "(min-width: 1921px)",
+  };
+
+  const isMobile = useMediaQuery(customBreakpoints["sm"]);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,8 +43,16 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
+
   return (
-    <AppBar>
+    <AppBar position="static">
       <Container>
         <Toolbar>
           {/* Typography component aligned to the left */}
@@ -43,7 +66,7 @@ const Header = () => {
               edge="end"
               color="inherit"
               aria-label="menu"
-              onClick={handleMenuOpen}
+              onClick={handleDrawerOpen} // Open the drawer on button click
             >
               <MenuIcon />
             </IconButton>
@@ -59,28 +82,27 @@ const Header = () => {
             </>
           )}
 
-          {/* Mobile Menu */}
-          <Menu
-            variant="menu"
-            anchorEl={anchorEl}
-            open={menuOpen}
-            onClose={handleMenuClose}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <MenuItem onClick={handleMenuClose} href="#register">
-              Register
-            </MenuItem>
-            <MenuItem onClick={handleMenuClose} href="#login">
-              Login
-            </MenuItem>
-          </Menu>
+          {/* Mobile Menu Drawer */}
+          <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
+            <List>
+              <ListItem
+                button
+                onClick={handleDrawerClose}
+                component="a"
+                href="#register"
+              >
+                <ListItemText primary="Register" />
+              </ListItem>
+              <ListItem
+                button
+                onClick={handleDrawerClose}
+                component="a"
+                href="#login"
+              >
+                <ListItemText primary="Login" />
+              </ListItem>
+            </List>
+          </Drawer>
         </Toolbar>
       </Container>
 
