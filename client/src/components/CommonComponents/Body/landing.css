@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@500&display=swap');
+
+.body {
+  background-color: #1976d2;
+
+}
+
+.MuiTypography-root {
+  color: white;
+}
+
+
+span {
+  color: #fdd835;
+}
+
+.btn-custom {
+  color: black;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 15px;
+}
+
+.btn-custom:hover {
+  background-color: rgb(236, 232, 232);
+  scale: 0.97;
+  transition: all 0.3s ease-in-out;
+}
