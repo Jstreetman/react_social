@@ -73,10 +73,10 @@ const Header = () => {
           ) : (
             // Render the Register and Login buttons for larger screens
             <>
-              <Button color="inherit" href="#register">
+              <Button color="inherit" href="/register">
                 Register
               </Button>
-              <Button color="inherit" href="#login">
+              <Button color="inherit" href="/login">
                 Login
               </Button>
             </>
