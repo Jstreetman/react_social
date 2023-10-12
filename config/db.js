@@ -1,4 +1,4 @@
 module.exports = {
   //your mongodb info
-  db: "mongodb:",
+  db: "mongodb://localhost:27017/react",
 };

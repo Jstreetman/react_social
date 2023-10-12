@@ -11,7 +11,7 @@ function App() {
     },
 
     {
-      description: `Our project is a cutting-edge web application developed using the MERN stack and a RESTful API. Designed with Material-UI, it offers a sleek 
+      description: `This project is a cutting-edge web application developed using the MERN stack and a RESTful API. Designed with Material-UI, it offers a sleek 
       and intuitive user interface. With a focus on scalability and modern technology, the application provides users with a seamless experience.
        Our platform serves as a social network and aims to continually evolve to meet user needs. Join us on this journey to explore a robust and user-friendly web solution.
       Feel free to modify it to better suit your project's specifics.`,
