@@ -32,7 +32,7 @@ const Landing = () => {
               </a>
             </div>
             <img
-              className="img-fluid  h-25 w-25 d-none d-sm-block"
+              className="img-fluid  h-50 w-25 d-none d-sm-block"
               src={profile}
               alt="profile"
             />
