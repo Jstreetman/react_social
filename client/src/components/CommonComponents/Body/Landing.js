@@ -5,8 +5,8 @@ import profile from "../../images/social.svg";
 
 const Landing = () => {
   return (
-    <div className="p-5">
-      <section className="showcase  text-light p-5 p-lg-0 pt-lg-5 mt-5 text-center text-sm-start">
+    <div className="p-5 ">
+      <section className=" text-light p-5 p-lg-0 pt-lg-5 mt-5 text-center text-sm-start">
         <Container>
           <div className="d-sm-flex align-items-center justify-content-between">
             <div>

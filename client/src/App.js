@@ -20,6 +20,7 @@ function App() {
   return (
     <div>
       <Header />
+
       <div className=" p-5  row row-cols-1 row-cols-md-3 g-3">
         <div className="col"></div>
         <Hero

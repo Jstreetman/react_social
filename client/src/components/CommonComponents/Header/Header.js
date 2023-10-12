@@ -9,20 +9,21 @@ import {
   Menu,
   MenuItem,
   useMediaQuery,
-  Drawer, // Import the Drawer component
+  Drawer,
   List,
   ListItem,
   ListItemText,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import Landing from "../Body/Landing";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [drawerOpen, setDrawerOpen] = useState(false); // State for the drawer
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const location = useLocation();
 
-  // Define your custom breakpoints
   const customBreakpoints = {
     xs: "(max-width: 600px)",
     sm: "(max-width: 960px)",
@@ -55,58 +56,72 @@ const Header = () => {
     <AppBar position="static">
       <Container>
         <Toolbar>
-          {/* Typography component aligned to the left */}
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
             Social App
           </Typography>
 
           {isMobile ? (
             // Render the hamburger menu button for smaller screens
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleDrawerOpen} // Open the drawer on button click
-            >
-              <MenuIcon />
-            </IconButton>
+            !location.pathname.startsWith("/register") &&
+            !location.pathname.startsWith("/login") && (
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleDrawerOpen}
+              >
+                <MenuIcon />
+              </IconButton>
+            )
           ) : (
             // Render the Register and Login buttons for larger screens
             <>
-              <Button color="inherit" href="/register">
-                Register
-              </Button>
-              <Button color="inherit" href="/login">
-                Login
-              </Button>
+              {(!location.pathname.startsWith("/register") || isMobile) && (
+                <Button color="inherit" href="/register">
+                  Register
+                </Button>
+              )}
+              {(!location.pathname.startsWith("/login") || isMobile) && (
+                <Button color="inherit" href="/login">
+                  Login
+                </Button>
+              )}
             </>
           )}
 
-          {/* Mobile Menu Drawer */}
-          <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
-            <List>
-              <ListItem
-                button
-                onClick={handleDrawerClose}
-                component="a"
-                href="#register"
-              >
-                <ListItemText primary="Register" />
-              </ListItem>
-              <ListItem
-                button
-                onClick={handleDrawerClose}
-                component="a"
-                href="#login"
-              >
-                <ListItemText primary="Login" />
-              </ListItem>
-            </List>
-          </Drawer>
+          {/* Mobile Menu Drawer - Show only for the root route */}
+          {location.pathname === "/" && (
+            <Drawer
+              anchor="right"
+              open={drawerOpen}
+              onClose={handleDrawerClose}
+            >
+              <List>
+                <ListItem
+                  button
+                  onClick={handleDrawerClose}
+                  component="a"
+                  href="#register"
+                >
+                  <ListItemText primary="Register" />
+                </ListItem>
+                <ListItem
+                  button
+                  onClick={handleDrawerClose}
+                  component="a"
+                  href="#login"
+                >
+                  <ListItemText primary="Login" />
+                </ListItem>
+              </List>
+            </Drawer>
+          )}
         </Toolbar>
       </Container>
-
-      <Landing />
+      <>
+        {!location.pathname.startsWith("/register") &&
+          !location.pathname.startsWith("/login") && <Landing />}
+      </>
     </AppBar>
   );
 };
