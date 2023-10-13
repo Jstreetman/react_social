@@ -5,7 +5,8 @@ import Typography from "@mui/material/Typography";
 import "bootstrap/dist/css/bootstrap.css";
 
 const footerStyle = {
-  position: "absolute",
+  position: "static",
+  bottom: 0,
   width: "100%",
   textAlign: "center",
 };

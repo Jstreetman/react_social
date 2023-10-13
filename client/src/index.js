@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Register from "../src/components/Auth/Register";
 import Login from "../src/components/Auth/Login";
+import Feed from "./components/Feed/Feed";
 import App from "./App";
 
 const theme = createTheme();
@@ -18,6 +19,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+
+  {
+    path: "/feed",
+    element: <Feed />,
   },
 
   {
