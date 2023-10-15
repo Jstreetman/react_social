@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Avatar,
   Button,
@@ -7,8 +8,17 @@ import {
   Container,
   Grid,
 } from "@mui/material";
+import Post from "../CommonComponents/Modal/Post";
 
 const FeedBox = () => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div>
       <Container maxWidth="md" sx={{ marginTop: "20px" }}>
@@ -28,9 +38,11 @@ const FeedBox = () => {
                   variant="outlined"
                   sx={{ borderColor: "black", color: "black" }}
                   fullWidth
+                  onClick={handleOpen}
                 >
                   <span>Create a Post</span>
                 </Button>
+                <Post open={open} handleClose={handleClose} />
               </Grid>
             </Grid>
           </CardActionArea>

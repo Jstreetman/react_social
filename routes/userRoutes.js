@@ -8,9 +8,30 @@ const cors = require("cors");
 const { body, validationResult } = require("express-validator");
 const Register = require("../models/register");
 
+//express session
+router.use(
+  session({
+    secret: "reactproject", // set your own private key
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+//require login function
+const requireLogin = (req, res, next) => {
+  if (req.session.user) {
+    // if the user is logged in, proceed to the next middleware
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
+
 if (process.env.CORS) {
   router.use(cors());
 }
+
+router.get("/feed", requireLogin);
 
 router.post(
   "/signup",
@@ -66,4 +87,62 @@ router.post(
   }
 );
 
+router.post(
+  "/signin",
+  [
+    body("email").isEmail().withMessage("Invalid Email..."),
+    body("password").notEmpty().withMessage("Password is required..."),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const { email, password } = req.body;
+
+    console.log("Email:", email);
+    console.log("Password:", password);
+
+    try {
+      // Check if email exists in the database
+      const user = await Register.findOne({ email });
+
+      console.log("User:", user);
+
+      if (!user) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      // Make sure the password is valid
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      // If all is valid, proceed
+      req.session.user = user;
+      req.session.username = user.username;
+      req.session.email = user.email;
+
+      res.status(200).json({ message: "Login Successful", user });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Server error..." });
+    }
+  }
+);
+
+router.get("/logout", (req, res) => {
+  // Destroy the session
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error destroying session:", err);
+    } else {
+      // Redirect to a login page or any other appropriate page after logout
+      res.redirect("/login"); // Change the route as needed
+    }
+  });
+});
 module.exports = router;
