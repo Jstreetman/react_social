@@ -134,6 +134,12 @@ router.post(
   }
 );
 
+router.get("/feed", (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/login");
+  }
+});
+
 router.get("/logout", (req, res) => {
   // Destroy the session
   req.session.destroy((err) => {

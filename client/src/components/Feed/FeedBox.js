@@ -12,11 +12,20 @@ import Post from "../CommonComponents/Modal/Post";
 
 const FeedBox = () => {
   const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleClickMenu = (e) => {
+    setAnchorEl(true);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(false);
   };
 
   return (

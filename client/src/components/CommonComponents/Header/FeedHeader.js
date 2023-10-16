@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   AppBar,
   Container,
@@ -14,6 +15,8 @@ import {
   Box,
   Tab,
   Tabs,
+  Menu, // Import Menu component
+  MenuItem, // Import MenuItem component
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -28,7 +31,8 @@ const FeedHeader = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const location = useLocation();
-  const [selectedTab, setSelectedTab] = useState(0); // Set an initial selected tab
+  const [selectedTab, setSelectedTab] = useState(0);
+  const navigate = useNavigate();
 
   const customBreakpoints = {
     xs: "(max-width: 600px)",
@@ -50,6 +54,28 @@ const FeedHeader = () => {
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
+  };
+
+  const [settingsMenuOpen, setSettingsMenuOpen] = useState(null); // State for the settings dropdown menu
+
+  const handleSettingsMenuOpen = (event) => {
+    setSettingsMenuOpen(event.currentTarget);
+  };
+
+  const handleSettingsMenuClose = () => {
+    setSettingsMenuOpen(null);
+  };
+
+  const handleLogout = () => {
+    axios
+      .get("/logout")
+      .then((response) => {
+        //redired user to login component
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log("Error logging out:", error);
+      });
   };
 
   return (
@@ -83,11 +109,16 @@ const FeedHeader = () => {
                 <Tab icon={<MessageIcon />} label="Messages" />
                 <Tab icon={<NotificationsIcon />} label="Notifications" />
                 <Tab icon={<AccountCircleIcon />} label="Profile" />
-                <Tab icon={<SettingIcon />} label="Settings" />
+                {!isMobile && ( // Hide the "Settings" tab for smaller screens
+                  <Tab
+                    icon={<SettingIcon />}
+                    label="Settings"
+                    onClick={handleSettingsMenuOpen}
+                  />
+                )}
               </Tabs>
             )}
 
-            {/* Mobile Menu Drawer - Show only for smaller screens */}
             {isMobile && (
               <Drawer
                 anchor="right"
@@ -108,11 +139,21 @@ const FeedHeader = () => {
                     <ListItemText primary="Profile" />
                   </ListItem>
                   <ListItem button onClick={handleDrawerClose}>
-                    <ListItemText primary="Settings" />
+                    <ListItemText primary="Log Out" />
                   </ListItem>
                 </List>
               </Drawer>
             )}
+
+            {/* Settings dropdown menu for larger screens */}
+            <Menu
+              anchorEl={settingsMenuOpen}
+              keepMounted
+              open={Boolean(settingsMenuOpen)}
+              onClose={handleSettingsMenuClose}
+            >
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+            </Menu>
           </Toolbar>
         </Container>
       </AppBar>
