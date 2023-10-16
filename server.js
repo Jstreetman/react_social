@@ -38,7 +38,7 @@ if (process.env.CORS) {
   app.use(cors());
 }
 
-app.use("/api/users", contactRoutes); // Use /api prefix for API routes
+app.use("/api/users", require("./routes/userRoutes")); // Use /api prefix for API routes
 
 // Define a catch-all route for non-API routes to serve the frontend
 app.get("*", (req, res) => {

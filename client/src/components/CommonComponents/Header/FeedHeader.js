@@ -138,7 +138,7 @@ const FeedHeader = () => {
                   <ListItem button onClick={handleDrawerClose}>
                     <ListItemText primary="Profile" />
                   </ListItem>
-                  <ListItem button onClick={handleDrawerClose}>
+                  <ListItem button onClick={handleLogout}>
                     <ListItemText primary="Log Out" />
                   </ListItem>
                 </List>

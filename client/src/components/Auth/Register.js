@@ -70,8 +70,6 @@ const Register = () => {
   };
 
   const handleChange = (e) => {
-    //setGender(event.target.value);
-
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };

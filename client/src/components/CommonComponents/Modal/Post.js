@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 
 const style = {
@@ -15,30 +16,68 @@ const style = {
   p: 4,
 };
 
-const textField = {
-  color: "white",
-};
-
 const Post = ({ open, handleClose }) => {
+  const [formData, setFormData] = useState({
+    pText: "",
+  });
+  const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post("/api/users/create", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 201) {
+        setMessage("Submitted...");
+        setFormData({
+          pText: "",
+        });
+
+        handleClose();
+      } else {
+        setMessage(response.data.message);
+      }
+    } catch (error) {
+      console.log("Error Creating Post:", error);
+    }
+  };
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Typography variant="h6" component="h2" color="black">
           Create Post
         </Typography>
-        <TextField
-          label="Your Post"
-          fullWidth
-          variant="outlined"
-          multiline
-          color="primary"
-          // Set the custom white color
-          rows={4}
-          sx={{ marginBottom: 2 }}
-        />
-        <Button variant="contained" onClick={handleClose}>
-          Submit
-        </Button>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Start typing..."
+            fullWidth
+            variant="outlined"
+            multiline
+            required
+            onChange={handleChange}
+            value={formData.pText}
+            color="primary"
+            name="pText"
+            // Set the custom white color
+            rows={4}
+            sx={{ marginBottom: 2 }}
+          />
+          <Button variant="contained" type="submit">
+            Submit
+          </Button>
+        </form>
       </Box>
     </Modal>
   );

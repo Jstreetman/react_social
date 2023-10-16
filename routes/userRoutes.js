@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const { body, validationResult } = require("express-validator");
 const Register = require("../models/register");
+const Post = require("../models/post");
 
 //express session
 router.use(
@@ -86,6 +87,38 @@ router.post(
     }
   }
 );
+
+router.post("/create", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ message: "User is not logged in..." });
+    }
+
+    //extract post data
+    const { pText } = req.body;
+    //getting userid from session
+    const username = req.session.username;
+    const email = req.session.email;
+
+    //create post with the specific user
+
+    console.log(username);
+    console.log(email);
+    const newPost = new Post({
+      pText,
+      username,
+      email,
+    });
+
+    //saving to database
+    await newPost.save();
+
+    res.status(201).json({ message: "Post Sucessfully Submitted..." });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 router.post(
   "/signin",
