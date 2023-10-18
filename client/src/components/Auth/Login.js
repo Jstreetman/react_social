@@ -11,6 +11,10 @@ import {
 import AuthFooter from "../CommonComponents/Footer/AuthFooter";
 import Header from "../CommonComponents/Header/Header";
 import axios from "axios";
+import Loginsnack from "../Snackbar/Loginsnack";
+import ErrorSnack from "../Snackbar/ErrorSnack";
+import Slide from "@mui/material/Slide";
+import Alert from "@mui/material/Alert";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -18,14 +22,36 @@ const Login = () => {
     password: "",
   });
 
-  const [message, setMessage] = useState("");
+  const [snackbarState, setSnackbarState] = useState({
+    open: false,
+    openErr: false,
+    Transition: Slide,
+  });
 
+  const { open, openErr, Transition } = snackbarState;
+
+  const handleCloseSnack = () => {
+    setSnackbarState({
+      ...snackbarState,
+      open: false,
+    });
+  };
+
+  const errSnack = () => {
+    setSnackbarState({
+      ...snackbarState,
+      openErr: false,
+    });
+  };
+
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -43,17 +69,31 @@ const Login = () => {
           password: "",
         });
 
-        // Redirect to /adminpanel after a delay
+        setSnackbarState({
+          ...snackbarState,
+          open: true,
+        });
+
+        // Redirect to /feed after a delay
         setTimeout(() => {
           navigate("/feed");
-        }, 1000);
+        }, 1250);
       } else {
         setMessage(response.data.message);
+        setSnackbarState({
+          ...snackbarState,
+          openErr: true,
+        });
       }
     } catch (error) {
+      setSnackbarState({
+        ...snackbarState,
+        openErr: true,
+      });
       console.error("Login error:", error);
     }
   };
+
   return (
     <div>
       <Header />
@@ -103,6 +143,22 @@ const Login = () => {
       </Container>
 
       <AuthFooter />
+      <Loginsnack
+        open={open}
+        handleCloseSnack={handleCloseSnack}
+        Transition={Transition}
+      >
+        <Alert
+          severity="success"
+          handleCloseSnack={handleCloseSnack}
+          sx={{ width: "100%" }}
+        ></Alert>
+      </Loginsnack>
+      <ErrorSnack
+        openErr={openErr}
+        errSnack={errSnack}
+        Transition={Transition}
+      ></ErrorSnack>
     </div>
   );
 };

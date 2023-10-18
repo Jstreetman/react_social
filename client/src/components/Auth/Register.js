@@ -13,10 +13,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../CommonComponents/Header/Header";
 import AuthFooter from "../CommonComponents/Footer/AuthFooter";
+import Alert from "@mui/material/Alert";
+import ErrorSnack from "../Snackbar/ErrorSnack";
+import Registersnack from "../Snackbar/Registersnack";
+import Slide from "@mui/material/Slide";
 import axios from "axios";
 
 const Register = () => {
-  //const [gender, setGender] = useState("");
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -24,8 +27,30 @@ const Register = () => {
     fName: "",
     gender: "",
   });
+
+  const [snackbarState, setSnackbarState] = useState({
+    open: false,
+    openErr: false,
+    Transition: Slide,
+  });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  const { open, openErr, Transition } = snackbarState;
+
+  const handleCloseSnack = () => {
+    setSnackbarState({
+      ...snackbarState,
+      open: false,
+    });
+  };
+
+  const errSnack = () => {
+    setSnackbarState({
+      ...snackbarState,
+      openErr: false,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,13 +83,27 @@ const Register = () => {
           gender: "",
         });
 
+        setSnackbarState({
+          ...snackbarState,
+          open: true,
+        });
+
         setTimeout(() => {
           navigate("/login");
-        }, 1000);
+        }, 1250);
       } else {
         setMessage(response.data.message);
+        setSnackbarState({
+          ...snackbarState,
+          openErr: true,
+        });
       }
     } catch (error) {
+      setSnackbarState({
+        ...snackbarState,
+        openErr: true,
+      });
+
       console.error("error:", error);
     }
   };
@@ -155,7 +194,24 @@ const Register = () => {
           </form>
         </Card>
       </Container>
-
+      <Registersnack
+        open={open}
+        handleCloseSnack={handleCloseSnack}
+        Transition={Transition}
+      >
+        <Alert
+          severity="success"
+          sx={{ width: "100%" }}
+          handleCloseSnack={handleCloseSnack}
+        ></Alert>
+      </Registersnack>
+      <ErrorSnack openErr={openErr} errSnack={errSnack} Transition={Transition}>
+        <Alert
+          severity="error"
+          sx={{ width: "100%" }}
+          errSnack={errSnack}
+        ></Alert>
+      </ErrorSnack>
       <AuthFooter />
     </div>
   );

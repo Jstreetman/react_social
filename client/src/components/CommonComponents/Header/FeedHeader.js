@@ -15,8 +15,8 @@ import {
   Box,
   Tab,
   Tabs,
-  Menu, // Import Menu component
-  MenuItem, // Import MenuItem component
+  Menu,
+  MenuItem,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -25,11 +25,22 @@ import MessageIcon from "@mui/icons-material/Message";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingIcon from "@mui/icons-material/Settings";
+import Logoutsnack from "../../Snackbar/Logoutsnack";
+import Slide from "@mui/material/Slide";
+import ErrorSnack from "../../Snackbar/ErrorSnack";
+import Alert from "@mui/material/Alert";
 
 const FeedHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [snackbarState, setSnackbarState] = useState({
+    openLogout: false,
+    openErr: false,
+    Transition: Slide,
+  });
+
+  const { openLogout, openErr, Transition } = snackbarState;
   const location = useLocation();
   const [selectedTab, setSelectedTab] = useState(0);
   const navigate = useNavigate();
@@ -66,14 +77,36 @@ const FeedHeader = () => {
     setSettingsMenuOpen(null);
   };
 
+  const handleCloseLogout = () => {
+    setSnackbarState({
+      openLogout: true,
+    });
+  };
+
+  const errSnack = () => {
+    setSnackbarState({
+      openErr: true,
+    });
+  };
+
   const handleLogout = () => {
     axios
       .get("/logout")
       .then((response) => {
         //redired user to login component
-        navigate("/login");
+        setSnackbarState({
+          ...snackbarState,
+          openLogout: true,
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, 1250);
       })
       .catch((error) => {
+        setSnackbarState({
+          ...snackbarState,
+          openErr: true,
+        });
         console.log("Error logging out:", error);
       });
   };
@@ -157,6 +190,26 @@ const FeedHeader = () => {
           </Toolbar>
         </Container>
       </AppBar>
+
+      <Logoutsnack
+        openLogout={openLogout}
+        handleCloseLogout={handleCloseLogout}
+        Transition={Transition}
+      >
+        <Alert
+          severity="success"
+          handleCloseLogout={handleCloseLogout}
+          sx={{ width: "100%" }}
+        ></Alert>
+      </Logoutsnack>
+
+      <ErrorSnack openErr={openErr} errSnack={errSnack} Transition={Transition}>
+        <Alert
+          severity="error"
+          errSnack={errSnack}
+          sx={{ width: "100%" }}
+        ></Alert>
+      </ErrorSnack>
     </div>
   );
 };
