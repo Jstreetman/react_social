@@ -16,7 +16,21 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
 
+  uImage: {
+    type: String,
+    required: true,
+  },
+
   pDate: {
+    type: String,
+    required: true,
+  },
+
+  pLikes: {
+    type: String,
+    required: true,
+  },
+  pComments: {
     type: String,
     required: true,
   },

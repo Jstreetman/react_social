@@ -6,7 +6,9 @@ const FeedData = () => {
   useEffect(() => {
     fetch("/api/users/posts")
       .then((response) => response.json())
-      .then((postData) => setPosts(postData))
+      .then((postData) => {
+        setPosts(postData.reverse());
+      })
       .catch((error) => {
         console.log("Error while fetching posts:", error);
       });
