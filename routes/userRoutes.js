@@ -9,6 +9,11 @@ const { body, validationResult } = require("express-validator");
 const Register = require("../models/register");
 const Post = require("../models/post");
 
+const formatDate = (date) => {
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+};
+
 //express session
 router.use(
   session({
@@ -88,7 +93,7 @@ router.post(
   }
 );
 
-router.post("/create", async (req, res) => {
+router.post("/create", requireLogin, async (req, res) => {
   try {
     if (!req.session.user) {
       return res.status(401).json({ message: "User is not logged in..." });
@@ -108,6 +113,7 @@ router.post("/create", async (req, res) => {
       pText,
       username,
       email,
+      pDate: formatDate(new Date()),
     });
 
     //saving to database
@@ -166,6 +172,20 @@ router.post(
     }
   }
 );
+
+router.get("/posts", requireLogin, async (req, res) => {
+  try {
+    if (!req.session.user) {
+      res.status(401).json({ message: "User is not authenticated..." });
+    }
+    const posts = await Post.find();
+
+    res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error..." });
+  }
+});
 
 router.get("/feed", (req, res) => {
   if (!req.session.user) {

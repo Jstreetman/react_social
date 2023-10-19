@@ -1,5 +1,4 @@
 import Header from "./components/CommonComponents/Header/Header";
-import Landing from "./components/CommonComponents/Body/Landing";
 import Hero from "./components/CommonComponents/Body/Hero";
 import "bootstrap/dist/css/bootstrap.css";
 import LandingFooter from "./components/CommonComponents/Footer/LandingFooter";
