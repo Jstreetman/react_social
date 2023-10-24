@@ -25,6 +25,11 @@ const Register = new mongoose.Schema({
     type: String,
     required: false,
   },
+
+  uImage: {
+    type: String,
+    required: false,
+  },
 });
 
 const User = mongoose.model("User", Register);

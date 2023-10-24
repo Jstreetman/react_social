@@ -8,6 +8,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Input,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,8 @@ import Alert from "@mui/material/Alert";
 import ErrorSnack from "../Snackbar/ErrorSnack";
 import Registersnack from "../Snackbar/Registersnack";
 import Slide from "@mui/material/Slide";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 
 const Register = () => {
@@ -26,6 +29,7 @@ const Register = () => {
     password: "",
     fName: "",
     gender: "",
+    uImage: "",
   });
 
   const [snackbarState, setSnackbarState] = useState({
@@ -52,25 +56,35 @@ const Register = () => {
     });
   };
 
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    // Handle the selected image file
+    setFormData({ ...formData, uImage: file });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "/api/users/signup",
-        {
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          fName: formData.fName,
-          gender: formData.gender,
+      // Create a FormData object to send form data and append all fields to it
+      const formDataToSubmit = new FormData();
+      formDataToSubmit.append("username", formData.username);
+      formDataToSubmit.append("email", formData.email);
+      formDataToSubmit.append("password", formData.password);
+      formDataToSubmit.append("fName", formData.fName);
+      formDataToSubmit.append("gender", formData.gender);
+
+      // Check if an image file was selected and append it to the form data
+      if (formData.uImage) {
+        formDataToSubmit.append("uImage", formData.uImage);
+      }
+
+      // Send the form data to the server
+      const response = await axios.post("/api/users/signup", formDataToSubmit, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      });
 
       if (response.status === 201) {
         setMessage("Sent!");
@@ -114,7 +128,7 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div style={{ minHeight: "130vh" }}>
       <Header />
       <Container maxWidth="md" sx={{ marginTop: "30px" }}>
         <Card>
@@ -125,7 +139,11 @@ const Register = () => {
               sx={{ backgroundColor: "#1976d2" }}
             ></CardHeader>
           </CardActionArea>
-          <form className="p-3" onSubmit={handleSubmit}>
+          <form
+            className="p-3"
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+          >
             <TextField
               type="text"
               variant="outlined"
@@ -182,6 +200,39 @@ const Register = () => {
               <MenuItem value="Male">Male</MenuItem>
               <MenuItem value="Female">Female</MenuItem>
             </Select>
+
+            <InputLabel htmlFor="imageInput">Upload Profile Image</InputLabel>
+            <Input
+              type="file"
+              name="uImage"
+              accept=".png, .jpeg, .jpg"
+              id="imageInput"
+              onChange={handleImageSelect}
+              style={{ display: "none" }} // Hide the default file input
+            />
+            <label htmlFor="imageInput">
+              <Button
+                variant="contained"
+                color="primary"
+                component="span"
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload Image
+              </Button>
+            </label>
+
+            {formData.uImage && (
+              <Avatar
+                src={URL.createObjectURL(formData.uImage)}
+                sx={{
+                  width: "100px",
+                  height: "100px",
+                  marginTop: "10px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              />
+            )}
 
             <Button
               sx={{ marginTop: "10px" }}

@@ -1,6 +1,9 @@
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardHeader from "@mui/material/CardHeader";
+import { Menu, MenuItem } from "@mui/material";
+
 import Typography from "@mui/material/Typography";
 import { Container, IconButton, Stack } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -10,6 +13,15 @@ import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 
 const FeedCard = (post) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div>
       <Container maxWidth="md" sx={{ marginTop: "20px" }}>
@@ -26,9 +38,17 @@ const FeedCard = (post) => {
             >
               <Typography>{post.pDate}</Typography>
 
-              <IconButton>
+              <IconButton onClick={handleClick}>
                 <MoreHorizIcon sx={{ color: "white" }} />
               </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Edit Post</MenuItem>
+                <MenuItem onClick={handleClose}>Delete Post</MenuItem>
+              </Menu>
             </Container>
             <Container sx={{ marginTop: "10px" }}>
               <Stack direction="row" alignItems="center" spacing={2}>

@@ -18,7 +18,7 @@ const postSchema = new mongoose.Schema({
 
   uImage: {
     type: String,
-    required: true,
+    required: false,
   },
 
   pDate: {
@@ -28,11 +28,11 @@ const postSchema = new mongoose.Schema({
 
   pLikes: {
     type: String,
-    required: true,
+    required: false,
   },
   pComments: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 

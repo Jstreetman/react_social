@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const session = require("express-session");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -8,11 +9,6 @@ const cors = require("cors");
 const { body, validationResult } = require("express-validator");
 const Register = require("../models/register");
 const Post = require("../models/post");
-
-const formatDate = (date) => {
-  const options = { year: "numeric", month: "short", day: "numeric" };
-  return new Intl.DateTimeFormat("en-US", options).format(date);
-};
 
 //express session
 router.use(
@@ -37,10 +33,28 @@ if (process.env.CORS) {
   router.use(cors());
 }
 
+const formatDate = (date) => {
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+};
+
+//configure store and file for image upload
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "/client/src/users"); // The directory where uploaded images will be stored
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 router.get("/feed", requireLogin);
 
 router.post(
   "/signup",
+  upload.single("uImage"),
   [
     // Validate password: minimum 8 characters
     body("password")
@@ -55,11 +69,17 @@ router.post(
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+      console.log("Validation Errors:", errors.array());
+      console.log("Request Body:", req.body);
       return res.status(400).json({ errors: errors.array() });
     }
 
     // Extracting data from the form request body
     const { username, email, password, fName, gender } = req.body;
+    const uImage = req.file ? req.file.path : null;
+
+    console.log("Request Body:", req.body);
+    console.log("File:", req.file);
 
     try {
       // checking if the user is already registered
@@ -80,6 +100,7 @@ router.post(
         password: hashPassword,
         fName,
         gender,
+        uImage,
       });
 
       // saving info to the database
@@ -93,38 +114,43 @@ router.post(
   }
 );
 
-router.post("/create", requireLogin, async (req, res) => {
-  try {
-    if (!req.session.user) {
-      return res.status(401).json({ message: "User is not logged in..." });
+router.post(
+  "/create",
+  requireLogin,
+  upload.single("uImage"),
+  async (req, res) => {
+    try {
+      if (!req.session.user) {
+        return res.status(401).json({ message: "User is not logged in..." });
+      }
+
+      //extract post data
+      const { pText } = req.body;
+      //getting userid from session
+      const username = req.session.username;
+      const email = req.session.email;
+
+      //create post with the specific user
+
+      console.log(username);
+      console.log(email);
+      const newPost = new Post({
+        pText,
+        username,
+        email,
+        pDate: formatDate(new Date()),
+      });
+
+      //saving to database
+      await newPost.save();
+
+      res.status(201).json({ message: "Post Sucessfully Submitted..." });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Server error" });
     }
-
-    //extract post data
-    const { pText } = req.body;
-    //getting userid from session
-    const username = req.session.username;
-    const email = req.session.email;
-
-    //create post with the specific user
-
-    console.log(username);
-    console.log(email);
-    const newPost = new Post({
-      pText,
-      username,
-      email,
-      pDate: formatDate(new Date()),
-    });
-
-    //saving to database
-    await newPost.save();
-
-    res.status(201).json({ message: "Post Sucessfully Submitted..." });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server error" });
   }
-});
+);
 
 router.post(
   "/signin",
