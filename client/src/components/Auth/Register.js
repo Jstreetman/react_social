@@ -75,9 +75,9 @@ const Register = () => {
       formDataToSubmit.append("gender", formData.gender);
 
       // Check if an image file was selected and append it to the form data
-      if (formData.uImage) {
-        formDataToSubmit.append("uImage", formData.uImage);
-      }
+      // if (formData.uImage) {
+      //   formDataToSubmit.append("uImage", formData.uImage);
+      // }
 
       // Send the form data to the server
       const response = await axios.post("/api/users/signup", formDataToSubmit, {
@@ -201,16 +201,17 @@ const Register = () => {
               <MenuItem value="Female">Female</MenuItem>
             </Select>
 
-            <InputLabel htmlFor="imageInput">Upload Profile Image</InputLabel>
-            <Input
+            {/* <InputLabel htmlFor="imageInput">Upload Profile Image</InputLabel> */}
+            {/* <Input
               type="file"
               name="uImage"
+              required
               accept=".png, .jpeg, .jpg"
               id="imageInput"
               onChange={handleImageSelect}
               style={{ display: "none" }} // Hide the default file input
-            />
-            <label htmlFor="imageInput">
+            /> */}
+            {/* <label htmlFor="imageInput">
               <Button
                 variant="contained"
                 color="primary"
@@ -219,9 +220,9 @@ const Register = () => {
               >
                 Upload Image
               </Button>
-            </label>
+            </label> */}
 
-            {formData.uImage && (
+            {/* {formData.uImage && (
               <Avatar
                 src={URL.createObjectURL(formData.uImage)}
                 sx={{
@@ -232,7 +233,7 @@ const Register = () => {
                   marginRight: "auto",
                 }}
               />
-            )}
+            )} */}
 
             <Button
               sx={{ marginTop: "10px" }}

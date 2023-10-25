@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const session = require("express-session");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 
@@ -41,14 +40,24 @@ const formatDate = (date) => {
 //configure store and file for image upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "/client/src/users"); // The directory where uploaded images will be stored
+    cb(null, "/public/static/media");
   },
   filename: function (req, file, cb) {
     cb(null, new Date().toISOString() + "-" + file.originalname);
   },
 });
 
-const upload = multer({ storage: storage });
+const imageFileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb("Invalid file type. Only images are allowed.", false);
+  }
+};
+
+const upload = multer({ storage, fileFilter: imageFileFilter });
+
+// const upload = multer({ storage: storage });
 
 router.get("/feed", requireLogin);
 
@@ -64,8 +73,11 @@ router.post(
     body("username").notEmpty().withMessage("Username is required"),
     body("email").isEmail().withMessage("Invalid email address"),
   ],
-  async (req, res) => {
+  async (req, res, err) => {
     // checking for validation errors
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
