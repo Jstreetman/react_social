@@ -63,7 +63,6 @@ router.get("/feed", requireLogin);
 
 router.post(
   "/signup",
-  upload.single("uImage"),
   [
     // Validate password: minimum 8 characters
     body("password")
@@ -73,25 +72,16 @@ router.post(
     body("username").notEmpty().withMessage("Username is required"),
     body("email").isEmail().withMessage("Invalid email address"),
   ],
-  async (req, res, err) => {
+  async (req, res) => {
     // checking for validation errors
-    if (err) {
-      return res.status(400).json({ error: err.message });
-    }
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      console.log("Validation Errors:", errors.array());
-      console.log("Request Body:", req.body);
       return res.status(400).json({ errors: errors.array() });
     }
 
     // Extracting data from the form request body
     const { username, email, password, fName, gender } = req.body;
-    const uImage = req.file ? req.file.path : null;
-
-    console.log("Request Body:", req.body);
-    console.log("File:", req.file);
 
     try {
       // checking if the user is already registered
@@ -112,7 +102,6 @@ router.post(
         password: hashPassword,
         fName,
         gender,
-        uImage,
       });
 
       // saving info to the database
@@ -129,7 +118,7 @@ router.post(
 router.post(
   "/create",
   requireLogin,
-  upload.single("uImage"),
+  // upload.single("uImage"),
   async (req, res) => {
     try {
       if (!req.session.user) {

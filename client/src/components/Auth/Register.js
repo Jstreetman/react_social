@@ -29,7 +29,7 @@ const Register = () => {
     password: "",
     fName: "",
     gender: "",
-    uImage: "",
+    //uImage: "",
   });
 
   const [snackbarState, setSnackbarState] = useState({
@@ -66,25 +66,21 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      // Create a FormData object to send form data and append all fields to it
-      const formDataToSubmit = new FormData();
-      formDataToSubmit.append("username", formData.username);
-      formDataToSubmit.append("email", formData.email);
-      formDataToSubmit.append("password", formData.password);
-      formDataToSubmit.append("fName", formData.fName);
-      formDataToSubmit.append("gender", formData.gender);
-
-      // Check if an image file was selected and append it to the form data
-      // if (formData.uImage) {
-      //   formDataToSubmit.append("uImage", formData.uImage);
-      // }
-
-      // Send the form data to the server
-      const response = await axios.post("/api/users/signup", formDataToSubmit, {
-        headers: {
-          "Content-Type": "multipart/form-data",
+      const response = await axios.post(
+        "/api/users/signup",
+        {
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          fName: formData.fName,
+          gender: formData.gender,
         },
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status === 201) {
         setMessage("Sent!");
@@ -101,23 +97,19 @@ const Register = () => {
           ...snackbarState,
           open: true,
         });
-
         setTimeout(() => {
           navigate("/login");
-        }, 1250);
+        }, 1000);
       } else {
         setMessage(response.data.message);
         setSnackbarState({
-          ...snackbarState,
           openErr: true,
         });
       }
     } catch (error) {
       setSnackbarState({
-        ...snackbarState,
         openErr: true,
       });
-
       console.error("error:", error);
     }
   };
