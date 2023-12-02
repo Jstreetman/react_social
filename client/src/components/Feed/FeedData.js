@@ -18,6 +18,7 @@ const FeedData = () => {
       {posts.map((post) => (
         <FeedCard
           key={post.id}
+          postId={post.postId}
           pDate={post.pDate}
           username={post.username}
           pText={post.pText}

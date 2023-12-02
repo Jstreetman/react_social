@@ -7,10 +7,10 @@ import { Menu, MenuItem } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Container, IconButton, Stack } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
+import FeedReact from "./FeedReact";
 
 const FeedCard = (post) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -78,31 +78,7 @@ const FeedCard = (post) => {
                 <Typography>0 Comments</Typography>
               </Stack>
             </Container>
-
-            <Container
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: "10px",
-                backgroundColor: "#1976d2",
-                color: "white",
-              }}
-            >
-              <Stack direction="row" alignItems="center">
-                <IconButton>
-                  <ThumbUpIcon sx={{ color: "white" }} />
-                </IconButton>
-                <Typography>Like</Typography>
-              </Stack>
-
-              <Stack direction="row" alignItems="center">
-                <IconButton>
-                  <ChatBubbleIcon sx={{ color: "white" }} />
-                </IconButton>
-                <Typography>Comment</Typography>
-              </Stack>
-            </Container>
+            <FeedReact postId={post.postId} />
           </CardActionArea>
         </Card>
       </Container>
