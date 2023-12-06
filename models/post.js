@@ -1,7 +1,11 @@
-const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const postSchema = new mongoose.Schema({
+  postedBy: {
+    type: ObjectId,
+    ref: "User",
+  },
   pText: {
     type: String,
     required: true,
@@ -27,14 +31,15 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
 
-  pLikes: {
-    type: String,
-    required: false,
-  },
-  pComments: {
-    type: String,
-    required: false,
-  },
+  updated: Date,
+  pLikes: [{ type: ObjectId, ref: "User" }],
+  pComments: [
+    {
+      pText: String,
+      pDate: { type: Date, default: Date.now },
+      postedBy: { type: ObjectId, ref: "User" },
+    },
+  ],
 });
 
 const Post = mongoose.model("Post", postSchema);

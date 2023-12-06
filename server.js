@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const config = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
+const postRoutes = require("./routes/postRoutes");
 const mongoose = require("mongoose");
 const port = 3000;
 
@@ -39,6 +40,7 @@ if (process.env.CORS) {
 }
 
 app.use("/api/users", userRoutes); // Use /api prefix for API routes
+app.use("/api/users", postRoutes);
 
 // Define a catch-all route for non-API routes to serve the frontend
 app.get("*", (req, res) => {
