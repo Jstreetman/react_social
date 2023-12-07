@@ -38,24 +38,24 @@ const formatDate = (date) => {
 };
 
 //configure store and file for image upload
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "/public/static/media");
-  },
-  filename: function (req, file, cb) {
-    cb(null, new Date().toISOString() + "-" + file.originalname);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "/public/static/media");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, new Date().toISOString() + "-" + file.originalname);
+//   },
+// });
 
-const imageFileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image/")) {
-    cb(null, true);
-  } else {
-    cb("Invalid file type. Only images are allowed.", false);
-  }
-};
+// const imageFileFilter = (req, file, cb) => {
+//   if (file.mimetype.startsWith("image/")) {
+//     cb(null, true);
+//   } else {
+//     cb("Invalid file type. Only images are allowed.", false);
+//   }
+// };
 
-const upload = multer({ storage, fileFilter: imageFileFilter });
+// const upload = multer({ storage, fileFilter: imageFileFilter });
 
 // const upload = multer({ storage: storage });
 
@@ -179,4 +179,79 @@ router.get("/logout", (req, res) => {
     }
   });
 });
+
+router.post(
+  "/create",
+  requireLogin,
+  // upload.single("uImage"),
+  async (req, res) => {
+    try {
+      if (!req.session.user) {
+        return res.status(401).json({ message: "User is not logged in..." });
+      }
+
+      //extract post data
+      const { pText } = req.body;
+      //getting userid from session
+      const username = req.session.username;
+      const email = req.session.email;
+
+      //create post with the specific user
+
+      console.log(username);
+      console.log(email);
+      const newPost = new Post({
+        pText,
+        username,
+        email,
+        pDate: formatDate(new Date()),
+      });
+
+      //saving to database
+      await newPost.save();
+
+      res.status(201).json({ message: "Post Sucessfully Submitted..." });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// router.get("/posts", requireLogin, async (req, res) => {
+//   try {
+//     if (!req.session.user) {
+//       res.status(401).json({ message: "User is not authenticated..." });
+//     }
+//     const posts = await Post.find();
+
+//     res.status(200).json(posts);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Server error..." });
+//   }
+// });
+
+// router.put("/posts/:postId", requireLogin, async (req, res) => {
+//   let form = (formidable = new formidable.IncomingForm());
+//   form.keepExtensions = true;
+//   form.parse(req, (err, fields) => {
+//     if (err) {
+//       return res.status(400).json({ error: "Could not be updated..." });
+//     }
+//   });
+//   let post = req.post;
+//   post = _.extend(post, fields);
+//   post.updated = Date.now();
+
+//   post.save((err, result) => {
+//     if (err) {
+//       return res.status(400).json({
+//         error: err,
+//       });
+//     }
+//     res.json(post);
+//   });
+// });
+
 module.exports = router;

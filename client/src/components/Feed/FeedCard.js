@@ -11,9 +11,18 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import FeedReact from "./FeedReact";
+import PostUpdate from "../CommonComponents/Modal/PostUpdate";
 
 const FeedCard = (post) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [anchorEl2, setAnchorEl2] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -46,7 +55,8 @@ const FeedCard = (post) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Edit Post</MenuItem>
+                <MenuItem onClick={handleOpen}>Edit Post</MenuItem>
+                <PostUpdate open={open} handleClose={handleClose} />
                 <MenuItem onClick={handleClose}>Delete Post</MenuItem>
               </Menu>
             </Container>
